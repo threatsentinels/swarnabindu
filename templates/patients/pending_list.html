@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Pending Registrations{% endblock %}
+
+{% block content %}
+<h2>Pending Self-Enrollments ({{ pending_patients|length }})</h2>
+
+{% if pending_patients %}
+<table>
+    <thead>
+        <tr>
+            <th>Child</th>
+            <th>Sex</th>
+            <th>DOB (BS)</th>
+            <th>Guardian</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Submitted</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in pending_patients %}
+        <tr>
+            <td>{{ p.child_name }}{% if p.nepali_name %}<br>{{ p.nepali_name }}{% endif %}</td>
+            <td>{{ p.get_sex_display }}</td>
+            <td>{{ p.dob_bs }}</td>
+            <td>{{ p.guardian_name }}</td>
+            <td>{{ p.phone_number }}{% if p.secondary_phone %}<br>{{ p.secondary_phone }}{% endif %}</td>
+            <td>{{ p.locality }}, Ward {{ p.ward }}, {{ p.municipality }}</td>
+            <td>{{ p.created_at|date:"Y-m-d H:i" }}</td>
+            <td>
+                <form method="post" action="{% url 'approve_pending_patient' p.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Approve</button>
+                </form>
+                <form method="post" action="{% url 'reject_pending_patient' p.pk %}" style="display:inline;"
+                      onsubmit="return confirm('Reject this submission?');">
+                    {% csrf_token %}
+                    <button type="submit">Reject</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No pending submissions.</p>
+{% endif %}
+{% endblock %}

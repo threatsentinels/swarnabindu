@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Patient Self-Enrollment{% endblock %}
+
+{% block content %}
+<h2>Patient Self-Enrollment</h2>
+<p>Submit your child's details below. Hospital staff will review your registration.</p>
+
+<form method="post" novalidate>
+    {% csrf_token %}
+
+    {# Honeypot: hidden from humans, do not remove #}
+    <div style="position:absolute; left:-9999px;" aria-hidden="true">
+        {{ form.website }}
+    </div>
+
+    {{ form.non_field_errors }}
+
+    {% for field in form %}
+        {% if field.name != "website" %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}
+            {{ field.errors }}
+        </div>
+        {% endif %}
+    {% endfor %}
+
+    <button type="submit">Submit Registration</button>
+</form>
+{% endblock %}
