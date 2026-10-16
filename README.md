@@ -1,117 +1,90 @@
-# Swarnabindu Drop Patient & Vaccination Management System
-**Government Hospital System — Nepal**
+# Swarnabindu Care
 
-A dedicated Django web application built for managing Swarnabindu vaccination sessions, patient registrations, vitals recording, exact Nepali age calculations, and official health reports.
+A patient and vaccination management system built for a government health facility in Nepal.
 
----
+![Swarnabindu Care screenshot](static/images/dashboard.png)
 
-## 🌟 Key Features
+**[Try Swarnabindu Care](https://ahckhotang.ggsrclub.com/)**
 
-1. **Nepali Calendar (Bikram Sambat) Centralized Engine**
-   - Natural BS Date conversion (`ad_to_bs`, `bs_to_ad`, `format_bs_date`).
-   - Hospital dates displayed primarily in BS (e.g., `19 Ashoj 2083 BS`).
+## Quick Start
 
-2. **Exact Age Calculation Service**
-   - Calculates exact age on vaccination dates in `X years Y months Z days`.
-   - Preserves historical age at vaccination permanently in DB records.
-   - Categorizes patients into government reporting age brackets (0–6m, 6–12m, 1–2y, etc.).
+Open the [live application](https://ahckhotang.ggsrclub.com/) to access the deployed system.
 
-3. **Patient & Shared Phone Rule**
-   - Unique patient ID generation (e.g., `SW-000001`).
-   - **Phone number is NOT unique**: Allows multiple siblings/children per guardian phone.
+## Features
 
-4. **Duplicate Patient Protection**
-   - Proactively checks `Name + DOB`, `Guardian + Phone`, `Name + Guardian` before registration.
-   - Issues non-blocking warnings with override confirmation.
+- **Patient records:** Register and manage patient information in one place.
+- **Vaccination tracking:** Maintain vaccination records and histories.
+- **Immunization sessions:** Manage vaccination schedules, including changes to session dates.
+- **Family-linked records:** Associate multiple children with shared family contact information.
+- **Nepali date support:** Work with Bikram Sambat dates alongside the needs of local healthcare services.
+- **Staff access and reporting:** Support different staff roles and generate reports for hospital records.
 
-5. **Manually Managed Vaccination Sessions**
-   - No automatic date guessing or interval offsets.
-   - Full date change audit logging (stores old date, new date, reason, user, and timestamp).
+## Run Locally
 
-6. **Next Vaccination Relationship**
-   - Links next appointment directly to a real `VaccinationSession`.
+### Requirements
 
-7. **Duplicate Vaccination Prevention**
-   - Unique constraint on `(patient, vaccination_session)` both at DB level and form validation.
+- Python 3.11
+- PostgreSQL
+- Git
 
-8. **Printable History Card**
-   - Dedicated A4 print CSS formatting for patient records.
+### Setup
 
-9. **Security, Roles & Audit Logging**
-   - Server-side role enforcement (Administrator, Vaccination Operator, Read-only User).
-   - Detailed audit trails for patient creation, session updates, and backups.
+Clone the repository and enter the project directory:
 
-10. **Database Backups & Health**
-    - `python manage.py backup_database` command.
-    - System health monitor.
-
----
-
-## 🚀 Quick Start Guide
-
-### 1. Prerequisites
-- Python 3.10+
-- `pip`
-
-### 2. Setup Environment & Install Dependencies
 ```bash
-# Extract zip archive
-unzip swarnabindu_hospital.zip
-cd swarnabindu_hospital
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install requirements
-pip install -r requirements.txt
+git clone https://github.com/dashing-dev/swarnabindu_care.git
+cd swarnabindu_care
 ```
 
-### 3. Database Migration & Demo Data Seeding
+Create and activate a virtual environment.
+
+**Windows (PowerShell):**
+
+```powershell
+py -3.11 -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+**Linux or macOS:**
+
 ```bash
-# Run migrations
-python manage.py makemigrations
+python3.11 -m venv .venv
+source .venv/bin/activate
+```
+
+Install the dependencies:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+### Database Configuration
+
+Create a PostgreSQL database and configure the application's database credentials using the configuration expected by the project. Set the required environment variables or settings before continuing.
+
+Apply migrations and create an administrator account:
+
+```bash
 python manage.py migrate
-
-# Seed fictitious demo data (creates admin, sessions, patients, shared phone numbers)
-python manage.py seed_demo
+python manage.py createsuperuser
 ```
 
-### 4. Run Development Server
+Collect static files and start the development server:
+
 ```bash
-python manage.py runserver 0.0.0.0:8000
-```
-Open browser at: `http://localhost:8000`
-
----
-
-## 🔑 Demo Credentials
-| Role | Username | Password |
-|---|---|---|
-| **Administrator** | `admin` | `admin123` |
-| **Vaccination Operator** | `operator` | `operator123` |
-
----
-
-## 🧪 Running Automated Tests
-To run the automated Django test suite verifying age calculation, duplicate phone support, session reschedule audit, and duplicate vaccination blocks:
-```bash
-python manage.py test hospital
+python manage.py collectstatic
+python manage.py runserver
 ```
 
----
+Open `http://127.0.0.1:8000/` in your browser.
 
-## 💾 Database Backup Command
-To create an instant timestamped snapshot of system data:
-```bash
-python manage.py backup_database
-```
-Backups are archived in the `backups/` directory.
+## How It Works
 
----
+Swarnabindu Care is built with Django and PostgreSQL. Django handles the application's server-side logic and data management, while PostgreSQL stores patient and vaccination records.
 
-## 🏥 Hospital LAN Deployment
-To deploy across hospital local area network PCs:
-1. Bind server: `python manage.py runserver 0.0.0.0:8000`
-2. Add server IP (e.g. `192.168.1.100`) to `.env` file under `ALLOWED_HOSTS`.
-3. Hospital workstations access system via `http://<SERVER_IP>:8000`.
+The system is designed around the requirements of a local government health facility, with support for Bikram Sambat dates, family-linked patient records, configurable vaccination sessions, and role-based staff access.
+
+**Test Credentials**
+ID : ```guest```
+
+Password : ```/@Guest123/```
